@@ -23,13 +23,11 @@ if [[ "$OSVAR" == "windows" ]]
 then
   if [[ ! -d "${TRAVIS_BUILD_DIR}/mingw/mingw${ARCH}" ]]
   then
-    wget -nv "https://nim-lang.org/download/mingw${ARCH}-6.3.0.7z"
-    7z x -y "mingw${ARCH}-6.3.0.7z" -o"${TRAVIS_BUILD_DIR}/mingw" > nul
+    wget -nv "https://nim-lang.org/download/mingw${ARCH}.7z"
+    7z x -y "mingw${ARCH}.7z" -o"${TRAVIS_BUILD_DIR}/mingw" > nul
   fi
   export PATH="${TRAVIS_BUILD_DIR}/mingw/mingw${ARCH}/bin:${PATH}"
 fi
-
-export OSVAR="${TRAVIS_OS_NAME}"
 
 # Archive extension
 if [[ "$OSVAR" == "windows" ]]; then
@@ -43,8 +41,10 @@ git clone https://github.com/alaviss/nightlies
 cd nightlies
 export YEAR=`date +%Y`
 export TAG=`git tag --sort=-taggerdate | grep $YEAR | grep $NIMBRANCH | head -n 1`
-export COMMIT=`echo $TAG | cut -f5,5 -d"-"`
+IFS='-' read -ra TAGSPLIT <<< "$TAG"
+export COMMIT=${TAGSPLIT[-1]}
 echo "Nightlies tag: $TAG"
+echo "Commit: $COMMIT"
 cd ..
 
 # Get Nim version
@@ -55,19 +55,20 @@ export PATCH=`grep NimPatch system.nim | tail -n 2 | head -n 1 | cut -f7,7 -d" "
 export VERSION="$MAJOR.$MINOR.$PATCH"
 echo "Nim version: $VERSION"
 
-# Download nightlies binary
-export FILENAME="nim-$VERSION-$OSVAR-$ARCH"
-wget "https://github.com/alaviss/nightlies/releases/download/$TAG/$FILENAME.$EXT"
-
 # Register binfmt_misc to run arm binaries
 if [[ $ARCH == "arm"* ]]
 then
   docker run --rm --privileged multiarch/qemu-user-static:register
+  if [[ $ARCH == "arm7l" ]]; then
+    export ARCH="arm7"
+  fi
+else
+  export ARCH="x$ARCH"
 fi
 
-if [[ $ARCH == "arm7l" ]]; then
-  export ARCH="arm7"
-fi
+# Download nightlies binary
+export FILENAME="nim-$VERSION-$OSVAR-$ARCH"
+wget "https://github.com/alaviss/nightlies/releases/download/$TAG/$FILENAME.$EXT"
 
 # Extract Nim
 if [[ "$EXT" == "tar.xz" ]]; then
