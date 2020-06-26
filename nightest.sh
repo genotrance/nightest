@@ -27,6 +27,7 @@ then
     7z x -y "mingw${ARCH}.7z" -o"${TRAVIS_BUILD_DIR}/mingw" > nul
   fi
   export PATH="${TRAVIS_BUILD_DIR}/mingw/mingw${ARCH}/bin:${PATH}"
+  gcc --version
 fi
 
 # Archive extension
@@ -40,9 +41,9 @@ fi
 git clone https://github.com/alaviss/nightlies
 cd nightlies
 export YEAR=`date +%Y`
-export TAG=`git tag --sort=-taggerdate | grep $YEAR | grep $NIMBRANCH | head -n 1`
+export TAG=`git tag --sort=-creatordate | grep $NIMBRANCH | head -n 1`
 IFS='-' read -ra TAGSPLIT <<< "$TAG"
-export COMMIT=${TAGSPLIT[-1]}
+export COMMIT=${TAGSPLIT[${#TAGSPLIT[@]}-1]}
 echo "Nightlies tag: $TAG"
 echo "Commit: $COMMIT"
 cd ..
@@ -84,6 +85,10 @@ fi
 
 # Run tests
 if [[ "$OSVAR" == "linux" ]]; then
+  # linux-x86
+  if [[ "$ARCH" == "32" ]]; then
+    export ARCH="x86"
+  fi
   # Use DockCross to test binaries
   docker run -t -i -e --rm -v $TRAVIS_BUILD_DIR/nim-$VERSION:/io dockcross/$OSVAR-$ARCH bash -c "cd /io && ./koch test"
 else
