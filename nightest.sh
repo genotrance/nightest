@@ -39,7 +39,7 @@ cd ..
 rm -rf nightlies
 
 # Get Nim version
-wget "https://github.com/nim-lang/Nim/raw/$COMMIT/lib/system.nim"
+wget -nv "https://github.com/nim-lang/Nim/raw/$COMMIT/lib/system.nim"
 export MAJOR=`grep NimMajor system.nim | head -n 1 | cut -f7,7 -d" "`
 export MINOR=`grep NimMinor system.nim | tail -n 2 | head -n 1 | cut -f7,7 -d" "`
 export PATCH=`grep NimPatch system.nim | tail -n 2 | head -n 1 | cut -f7,7 -d" "`
@@ -60,17 +60,19 @@ else
 fi
 
 # Download nightlies binary
-wget "https://github.com/alaviss/nightlies/releases/download/$TAG/$FILENAME.$EXT"
+wget -nv "https://github.com/alaviss/nightlies/releases/download/$TAG/$FILENAME.$EXT"
 
 # Run tests
 if [[ "$OSVAR" == "linux" ]]; then
   # Fix arch for dockcross
   if [[ "$ARCH" == "32" ]]; then
     export IMAGE="$OSVAR-x86"
+  elif [[ $ARCH == "64" ]]; then
+    export IMAGE="$OSVAR-x64"
   elif [[ $ARCH == "armv7"* ]]; then
     export IMAGE="$OSVAR-armv7"
   else
-    export IMAGE="$OSVAR-x$ARCH"
+    export IMAGE="$OSVAR-$ARCH"
   fi
 
   # Register binfmt_misc to run arm binaries
@@ -85,3 +87,4 @@ else
 fi
 
 cd ..
+rm -rf test
