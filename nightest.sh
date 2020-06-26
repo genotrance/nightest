@@ -77,6 +77,11 @@ if [[ "$OSVAR" == "linux" ]]; then
 
   # Register binfmt_misc to run arm binaries
   if [[ $ARCH == "arm"* ]]; then
+    if [[ `whoami` == "root" ]]; then
+      apt -q update
+      apt -q -y install --only-upgrade qemu-user
+    fi
+
     docker run --rm --privileged multiarch/qemu-user-static:register
   fi
 

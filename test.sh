@@ -7,19 +7,36 @@ if [[ "$OSVAR" == "osx" ]]; then
   brew install boehmgc sfml gnu-tar > /dev/null
   brew upgrade node > /dev/null
 elif [[ "$OSVAR" == "linux" ]]; then
-  # Apt packages
+  # Apt packages + Nodejs
   set -e
-  apt -q update
-  apt -q -y upgrade
-  apt -q -y install libcurl4-openssl-dev libsdl1.2-dev libgc-dev libsfml-dev nodejs
+  curl -sL https://deb.nodesource.com/setup_12.x | bash -
+  apt -q -y install libcurl4-openssl-dev libsdl1.2-dev libgc-dev libsfml-dev valgrind nodejs
+
+  # Running in Travis
+  export TRAVIS="true"
 elif [[ "$OSVAR" == "windows" ]]; then
-  if [[ ! -d "${TRAVIS_BUILD_DIR}/mingw/mingw${ARCH}" ]]
-  then
-    # MinGW on Windows
-    wget -nv "https://nim-lang.org/download/mingw${ARCH}.7z"
-    7z x -y "mingw${ARCH}.7z" -o"${TRAVIS_BUILD_DIR}/mingw" > /dev/null
+  # MinGW on Windows
+  if [[ ! -d "$TRAVIS_BUILD_DIR/mingw/mingw$ARCH" ]]; then
+    wget -nv "https://nim-lang.org/download/mingw$ARCH.7z"
+    7z x -y "mingw$ARCH.7z" -o"$TRAVIS_BUILD_DIR/mingw" > /dev/null
   fi
-  export PATH="${TRAVIS_BUILD_DIR}/mingw/mingw${ARCH}/bin:${PATH}"
+
+  # Nodejs on Windows
+  export NODEVER="v12.18.1"
+
+  if [[ "$ARCH" == "64" ]]; then
+    export NODEFILE="node-$NODEVER-win-x64"
+  else
+    export NODEFILE="node-$NODEVER-win-x86"
+  fi
+
+  if [[ ! -d "$TRAVIS_BUILD_DIR/nodejs" ]]; then
+    export NODEURL="https://nodejs.org/dist/$NODEVER/$NODEFILE.zip"
+    wget -nv "$NODEURL.zip"
+    7z x -y "$NODEFILE.zip" -o"$TRAVIS_BUILD_DIR/nodejs" > /dev/null
+  fi
+
+  export PATH="$TRAVIS_BUILD_DIR/nodejs/$NODEFILE:$TRAVIS_BUILD_DIR/mingw/mingw$ARCH/bin:$PATH"
   gcc --version
 fi
 
@@ -36,6 +53,12 @@ cd nim-$VERSION
 export PATH="$PATH:`pwd`/bin"
 
 # Run testament
-testament --nim:`pwd`/bin/nim --pedantic all -d:nimCoroutines
+if [[ $ARCH == "arm"* ]]; then
+  # Only megatest for arm
+  export TESTS="cat megatest"
+else
+  export TESTS="all"
+fi
+testament --nim:`pwd`/bin/nim --pedantic $TESTS -d:nimCoroutines
 
 cd ..
