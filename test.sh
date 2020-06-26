@@ -16,9 +16,9 @@ elif [[ "$OSVAR" == "linux" ]]; then
   export TRAVIS="true"
 elif [[ "$OSVAR" == "windows" ]]; then
   # MinGW on Windows
-  if [[ ! -d "$TRAVIS_BUILD_DIR/mingw/mingw$ARCH" ]]; then
+  if [[ ! -d "$BUILDDIR/mingw/mingw$ARCH" ]]; then
     wget -nv "https://nim-lang.org/download/mingw$ARCH.7z"
-    7z x -y "mingw$ARCH.7z" -o"$TRAVIS_BUILD_DIR/mingw" > /dev/null
+    7z x -y "mingw$ARCH.7z" -o"$BUILDDIR/mingw" > /dev/null
   fi
 
   # Nodejs on Windows
@@ -30,13 +30,13 @@ elif [[ "$OSVAR" == "windows" ]]; then
     export NODEFILE="node-$NODEVER-win-x86"
   fi
 
-  if [[ ! -d "$TRAVIS_BUILD_DIR/nodejs" ]]; then
+  if [[ ! -d "$BUILDDIR/nodejs" ]]; then
     export NODEURL="https://nodejs.org/dist/$NODEVER/$NODEFILE.zip"
     wget -nv "$NODEURL.zip"
-    7z x -y "$NODEFILE.zip" -o"$TRAVIS_BUILD_DIR/nodejs" > /dev/null
+    7z x -y "$NODEFILE.zip" -o"$BUILDDIR/nodejs" > /dev/null
   fi
 
-  export PATH="$TRAVIS_BUILD_DIR/nodejs/$NODEFILE:$TRAVIS_BUILD_DIR/mingw/mingw$ARCH/bin:$PATH"
+  export PATH="$BUILDDIR/nodejs/$NODEFILE:$BUILDDIR/mingw/mingw$ARCH/bin:$PATH"
   gcc --version
 fi
 

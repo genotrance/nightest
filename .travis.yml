@@ -52,11 +52,17 @@ matrix:
   - os: linux
     env: NIMBRANCH=devel ARCH=arm64
 
-  before_cache:
-  - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      brew cleanup
-    fi
+addons:
+  apt:
+    update: true
+    packages:
+      - qemu-user
+
+before_cache:
+- |
+  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    brew cleanup
+  fi
 
 cache:
   directories:
@@ -66,4 +72,5 @@ cache:
 
 script:
   - export OSVAR="$TRAVIS_OS_NAME"
+  - export BUILDDIR="$TRAVIS_BUILD_DIR"
   - ./nightest.sh

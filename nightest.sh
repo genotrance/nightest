@@ -1,9 +1,35 @@
 #! /bin/bash
 
-# Required environment variables:
-# - OSVAR=linux|osx|windows
+# Configurable environment variables:
 # - NIMBRANCH=devel|version-1-0|version-1-2
 # - ARCH=32|64|arm64|arm7l
+
+# Detect OSVAR if not Travis
+if [[ -z "$OSVAR" ]]; then
+  UNAME=`uname`
+  if [[ "$UNAME" == "Linux" ]]; then
+    export OSVAR="linux"
+  elif [[ "$UNAME" == "Darwin" ]]; then
+    export OSVAR="osx"
+  else
+    export OSVAR="windows"
+  fi
+fi
+
+# Use local directory if not Travis
+if [[ -z "$BUILDDIR" ]]; then
+  export BUILDDIR=`pwd`
+fi
+
+# Test devel if no branch
+if [[ -z "$NIMBRANCH" ]]; then
+  export NIMBRANCH="devel"
+fi
+
+# Test 64-bit by default
+if [[ -z "$ARCH" ]]; then
+  export ARCH="64"
+fi
 
 set -e
 
@@ -77,11 +103,6 @@ if [[ "$OSVAR" == "linux" ]]; then
 
   # Register binfmt_misc to run arm binaries
   if [[ $ARCH == "arm"* ]]; then
-    if [[ `whoami` == "root" ]]; then
-      apt -q update
-      apt -q -y install --only-upgrade qemu-user
-    fi
-
     docker run --rm --privileged multiarch/qemu-user-static:register
   fi
 
