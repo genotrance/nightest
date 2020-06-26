@@ -4,8 +4,7 @@
 if [[ "$OSVAR" == "osx" ]]; then
   # Brew packages
   brew update > /dev/null
-  brew install boehmgc sfml gnu-tar > /dev/null
-  brew upgrade node > /dev/null
+  brew install boehmgc sfml gnu-tar nodejs > /dev/null
 elif [[ "$OSVAR" == "linux" ]]; then
   # Apt packages + Nodejs
   set -e
@@ -59,6 +58,6 @@ if [[ $ARCH == "arm"* ]]; then
 else
   export TESTS="all"
 fi
-testament --nim:`pwd`/bin/nim --pedantic $TESTS -d:nimCoroutines
+./koch test $TESTS
 
 cd ..
