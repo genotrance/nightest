@@ -77,15 +77,15 @@ wget "https://github.com/alaviss/nightlies/releases/download/$TAG/$FILENAME.$EXT
 
 # Extract Nim
 if [[ "$EXT" == "tar.xz" ]]; then
-  7z x -y "$FILENAME.$EXT" > nul
-  export EXT=tar
+  tar xJf "$FILENAME.$EXT" -C "${TRAVIS_BUILD_DIR}" > /dev/null
+else
+  7z x -y "$FILENAME.$EXT" -o"${TRAVIS_BUILD_DIR}" > nul
 fi
-7z x -y "$FILENAME.$EXT" -o"${TRAVIS_BUILD_DIR}/nim" > nul
 
 # Run tests
 if [[ "$OSVAR" == "linux" ]]; then
   # Use DockCross to test binaries
-  docker run -t -i -e --rm -v $TRAVIS_BUILD_DIR/nim:/io dockcross/$OSVAR-$ARCH bash -c "cd /io && ./koch test"
+  docker run -t -i -e --rm -v $TRAVIS_BUILD_DIR/nim-$VERSION:/io dockcross/$OSVAR-$ARCH bash -c "cd /io && ./koch test"
 else
-  cd $TRAVIS_BUILD_DIR/nim && ./koch test
+  cd $TRAVIS_BUILD_DIR/nim-$VERSION && ./koch test
 fi
