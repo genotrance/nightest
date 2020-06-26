@@ -1,0 +1,78 @@
+dist: xenial
+
+language: c
+
+services:
+  - docker
+
+matrix:
+  include:
+  - os: linux
+    env: NIMBRANCH=version-1-2 ARCH=x64
+  - os: linux
+    env: NIMBRANCH=version-1-2 ARCH=x32
+  - os: osx
+    env: NIMBRANCH=version-1-2 ARCH=x64
+  - os: windows
+    env: NIMBRANCH=version-1-2 ARCH=x64
+  - os: windows
+    env: NIMBRANCH=version-1-2 ARCH=x32
+  - os: linux
+    env: NIMBRANCH=version-1-2 ARCH=armv7l
+  - os: linux
+    env: NIMBRANCH=version-1-2 ARCH=arm64
+
+  - os: linux
+    env: NIMBRANCH=version-1-0 ARCH=x64
+  - os: linux
+    env: NIMBRANCH=version-1-0 ARCH=x32
+  - os: osx
+    env: NIMBRANCH=version-1-0 ARCH=x64
+  - os: windows
+    env: NIMBRANCH=version-1-0 ARCH=x64
+  - os: windows
+    env: NIMBRANCH=version-1-0 ARCH=x32
+  - os: linux
+    env: NIMBRANCH=version-1-0 ARCH=armv7l
+  - os: linux
+    env: NIMBRANCH=version-1-0 ARCH=arm64
+
+  - os: linux
+    env: NIMBRANCH=devel ARCH=x64
+  - os: linux
+    env: NIMBRANCH=devel ARCH=x32
+  - os: osx
+    env: NIMBRANCH=devel ARCH=x64
+  - os: windows
+    env: NIMBRANCH=devel ARCH=x64
+  - os: windows
+    env: NIMBRANCH=devel ARCH=x32
+  - os: linux
+    env: NIMBRANCH=devel ARCH=armv7l
+  - os: linux
+    env: NIMBRANCH=devel ARCH=arm64
+
+addons:
+  apt:
+    update: true
+    packages:
+      - libcurl4-openssl-dev
+      - libsdl1.2-dev
+      - libgc-dev
+      - libsfml-dev
+      - nodejs
+
+before_cache:
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]
+    then
+      brew cleanup
+    fi
+
+cache:
+  directories:
+    - mingw
+    - $HOME/Library/Caches/Homebrew
+
+script:
+  - . ./nightest.sh
