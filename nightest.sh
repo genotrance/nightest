@@ -66,8 +66,13 @@ else
   export ARCH="x$ARCH"
 fi
 
+# Fix OS filename
+if [[ "$OSVAR" == "osx" ]]; then
+  export OSVAR="macosx"
+fi
+
 # Download nightlies binary
-export FILENAME="nim-$VERSION-$OSVAR-$ARCH"
+export FILENAME="nim-$VERSION-${OSVAR}_$ARCH"
 wget "https://github.com/alaviss/nightlies/releases/download/$TAG/$FILENAME.$EXT"
 
 # Extract Nim
