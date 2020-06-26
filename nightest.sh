@@ -85,8 +85,8 @@ if [[ "$OSVAR" == "linux" ]]; then
   # Fix arch for dockcross
   if [[ "$ARCH" == "x32" ]]; then
     export ARCH="x86"
-  elif [[ $ARCH == "arm7"* ]]; then
-    export ARCH="arm7"
+  elif [[ $ARCH == "armv7"* ]]; then
+    export ARCH="armv7"
   fi
 
   # Use DockCross to test binaries
