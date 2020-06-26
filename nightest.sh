@@ -86,11 +86,12 @@ fi
 # Run tests
 if [[ "$OSVAR" == "linux" ]]; then
   # linux-x86
-  if [[ "$ARCH" == "32" ]]; then
+  if [[ "$ARCH" == "x32" ]]; then
     export ARCH="x86"
   fi
   # Use DockCross to test binaries
-  docker run -t -i -e --rm -v $TRAVIS_BUILD_DIR/nim-$VERSION:/io dockcross/$OSVAR-$ARCH bash -c "cd /io && ./koch test"
+  docker run -t -i -e --rm -v $TRAVIS_BUILD_DIR/nim-$VERSION:/io dockcross/$OSVAR-$ARCH bash -c "export PATH=$PATH:/io/bin && cd /io && ./koch test"
 else
+  export PATH=$PATH:`pwd`/bin
   cd $TRAVIS_BUILD_DIR/nim-$VERSION && ./koch test
 fi
