@@ -60,7 +60,7 @@ echo "Nim version: $VERSION"
 if [[ $ARCH == "arm"* ]]
 then
   docker run --rm --privileged multiarch/qemu-user-static:register
-  if [[ $ARCH == "arm7l" ]]; then
+  if [[ "$ARCH" == "arm7l" ]]; then
     export ARCH="arm7"
   fi
 else
@@ -92,6 +92,5 @@ if [[ "$OSVAR" == "linux" ]]; then
   # Use DockCross to test binaries
   docker run -t -i -e --rm -v $TRAVIS_BUILD_DIR/nim-$VERSION:/io dockcross/$OSVAR-$ARCH bash -c "export PATH=$PATH:/io/bin && cd /io && ./koch test"
 else
-  export PATH=$PATH:`pwd`/bin
-  cd $TRAVIS_BUILD_DIR/nim-$VERSION && ./koch test
+  cd $TRAVIS_BUILD_DIR/nim-$VERSION && export PATH=$PATH:`pwd`/bin && ./koch test
 fi
