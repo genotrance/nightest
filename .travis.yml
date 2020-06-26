@@ -52,20 +52,9 @@ matrix:
   - os: linux
     env: NIMBRANCH=devel ARCH=arm64
 
-addons:
-  apt:
-    update: true
-    packages:
-      - libcurl4-openssl-dev
-      - libsdl1.2-dev
-      - libgc-dev
-      - libsfml-dev
-      - nodejs
-
 before_cache:
   - |
-    if [[ "$TRAVIS_OS_NAME" == "osx" ]]
-    then
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew cleanup
     fi
 
@@ -75,4 +64,5 @@ cache:
     - $HOME/Library/Caches/Homebrew
 
 script:
-  - . ./nightest.sh
+  - export OSVAR="$TRAVIS_OS_NAME"
+  - ./nightest.sh
