@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -e
+
 # Install packages
 if [[ "$OSVAR" == "osx" ]]; then
   # Brew packages
@@ -7,7 +9,6 @@ if [[ "$OSVAR" == "osx" ]]; then
   brew install boehmgc sfml gnu-tar nodejs > /dev/null
 elif [[ "$OSVAR" == "linux" ]]; then
   # Apt packages + Nodejs
-  set -e
   curl -sL https://deb.nodesource.com/setup_12.x | bash -
   apt -q -y install libcurl4-openssl-dev libsdl1.2-dev libgc-dev libsfml-dev valgrind nodejs
 
@@ -29,7 +30,7 @@ elif [[ "$OSVAR" == "windows" ]]; then
     export NODEFILE="node-$NODEVER-win-x86"
   fi
 
-  if [[ ! -d "$BUILDDIR/nodejs" ]]; then
+  if [[ ! -d "$BUILDDIR/nodejs/$NODEFILE" ]]; then
     export NODEURL="https://nodejs.org/dist/$NODEVER/$NODEFILE.zip"
     wget -nv "$NODEURL.zip"
     7z x -y "$NODEFILE.zip" -o"$BUILDDIR/nodejs" > /dev/null
@@ -49,7 +50,14 @@ fi
 cd nim-$VERSION
 
 # Add Nim to path
-export PATH="$PATH:`pwd`/bin"
+export PATH="`pwd`/bin:$PATH"
+
+# Copy testament/nim
+if [[ "$OSVAR" == "windows" ]]; then
+  export EXEEXT=".exe"
+fi
+cp ./bin/testament$EXEEXT testament/.
+cp ./bin/nim$EXEEXT compiler/.
 
 # Run testament
 if [[ $ARCH == "arm"* ]]; then

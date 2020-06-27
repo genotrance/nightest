@@ -17,8 +17,8 @@ matrix:
     env: NIMBRANCH=version-1-2 ARCH=64
   - os: windows
     env: NIMBRANCH=version-1-2 ARCH=32
-  - os: linux
-    env: NIMBRANCH=version-1-2 ARCH=armv7l
+  # - os: linux
+  #   env: NIMBRANCH=version-1-2 ARCH=armv7l
   - os: linux
     env: NIMBRANCH=version-1-2 ARCH=arm64
 
@@ -32,8 +32,8 @@ matrix:
     env: NIMBRANCH=version-1-0 ARCH=64
   - os: windows
     env: NIMBRANCH=version-1-0 ARCH=32
-  - os: linux
-    env: NIMBRANCH=version-1-0 ARCH=armv7l
+  # - os: linux
+  #   env: NIMBRANCH=version-1-0 ARCH=armv7l
   - os: linux
     env: NIMBRANCH=version-1-0 ARCH=arm64
 
@@ -47,8 +47,8 @@ matrix:
     env: NIMBRANCH=devel ARCH=64
   - os: windows
     env: NIMBRANCH=devel ARCH=32
-  - os: linux
-    env: NIMBRANCH=devel ARCH=armv7l
+  # - os: linux
+  #   env: NIMBRANCH=devel ARCH=armv7l
   - os: linux
     env: NIMBRANCH=devel ARCH=arm64
 
