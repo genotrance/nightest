@@ -6,7 +6,7 @@ set -e
 if [[ "$OSVAR" == "osx" ]]; then
   # Brew packages
   brew update > /dev/null
-  brew install boehmgc sfml gnu-tar nodejs > /dev/null
+  brew install boehmgc sfml gnu-tar nodejs || : > /dev/null
 elif [[ "$OSVAR" == "linux" ]]; then
   # Apt packages + Nodejs
   curl -sL https://deb.nodesource.com/setup_12.x | bash -
@@ -32,7 +32,7 @@ elif [[ "$OSVAR" == "windows" ]]; then
 
   if [[ ! -d "$BUILDDIR/nodejs/$NODEFILE" ]]; then
     export NODEURL="https://nodejs.org/dist/$NODEVER/$NODEFILE.zip"
-    wget -nv "$NODEURL.zip"
+    wget -nv "$NODEURL"
     7z x -y "$NODEFILE.zip" -o"$BUILDDIR/nodejs" > /dev/null
   fi
 
