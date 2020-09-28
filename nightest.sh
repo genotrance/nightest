@@ -53,7 +53,7 @@ cd test
 cp ../test.sh .
 
 # Get nightlies tag and Nim commit
-git clone https://github.com/alaviss/nightlies
+git clone https://github.com/nim-lang/nightlies
 cd nightlies
 export YEAR=`date +%Y`
 export TAG=`git tag --sort=-creatordate | grep $NIMBRANCH | head -n 1`
