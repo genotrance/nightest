@@ -8,6 +8,36 @@ services:
 matrix:
   include:
   - os: linux
+    env: NIMBRANCH=devel ARCH=64
+  # - os: linux
+  #   env: NIMBRANCH=devel ARCH=32
+  - os: osx
+    env: NIMBRANCH=devel ARCH=64
+  - os: windows
+    env: NIMBRANCH=devel ARCH=64
+  - os: windows
+    env: NIMBRANCH=devel ARCH=32
+  # - os: linux
+  #   env: NIMBRANCH=devel ARCH=armv7l
+  - os: linux
+    env: NIMBRANCH=devel ARCH=arm64
+
+  - os: linux
+    env: NIMBRANCH=version-1-4 ARCH=64
+  # - os: linux
+  #   env: NIMBRANCH=version-1-4 ARCH=32
+  - os: osx
+    env: NIMBRANCH=version-1-4 ARCH=64
+  - os: windows
+    env: NIMBRANCH=version-1-4 ARCH=64
+  - os: windows
+    env: NIMBRANCH=version-1-4 ARCH=32
+  # - os: linux
+  #   env: NIMBRANCH=version-1-4 ARCH=armv7l
+  - os: linux
+    env: NIMBRANCH=version-1-4 ARCH=arm64
+
+  - os: linux
     env: NIMBRANCH=version-1-2 ARCH=64
   # - os: linux
   #   env: NIMBRANCH=version-1-2 ARCH=32
@@ -36,21 +66,6 @@ matrix:
   #   env: NIMBRANCH=version-1-0 ARCH=armv7l
   - os: linux
     env: NIMBRANCH=version-1-0 ARCH=arm64
-
-  - os: linux
-    env: NIMBRANCH=devel ARCH=64
-  # - os: linux
-  #   env: NIMBRANCH=devel ARCH=32
-  - os: osx
-    env: NIMBRANCH=devel ARCH=64
-  - os: windows
-    env: NIMBRANCH=devel ARCH=64
-  - os: windows
-    env: NIMBRANCH=devel ARCH=32
-  # - os: linux
-  #   env: NIMBRANCH=devel ARCH=armv7l
-  - os: linux
-    env: NIMBRANCH=devel ARCH=arm64
 
 addons:
   apt:

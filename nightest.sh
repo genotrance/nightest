@@ -86,7 +86,7 @@ else
 fi
 
 # Download nightlies binary
-wget -nv "https://github.com/alaviss/nightlies/releases/download/$TAG/$FILENAME.$EXT"
+wget -nv "https://github.com/nim-lang/nightlies/releases/download/$TAG/$FILENAME.$EXT"
 
 # Run tests
 if [[ "$OSVAR" == "linux" ]]; then
