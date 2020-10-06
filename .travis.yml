@@ -72,6 +72,7 @@ addons:
     update: true
     packages:
       - qemu-user
+      - netbase
 
 before_cache:
 - |
